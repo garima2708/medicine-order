@@ -24,8 +24,10 @@ ENV MCP_PORT=3333
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/src ./src
+COPY --from=builder /app/scripts ./scripts
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/medicine-order.sqlite ./medicine-order.sqlite
 COPY --from=builder /app/next.config.ts ./next.config.ts
@@ -34,4 +36,4 @@ COPY --from=builder /app/next-env.d.ts ./next-env.d.ts
 
 EXPOSE 3000 3333
 
-CMD ["sh", "-c", "pnpm start -- --hostname 0.0.0.0 --port ${PORT} & pnpm mcp:start & wait -n"]
+CMD ["node", "scripts/start-runtime.mjs"]
