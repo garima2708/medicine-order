@@ -106,7 +106,7 @@ mcpServer.registerTool(
 const app = createMcpExpressApp({ host });
 const transports = new Map<string, StreamableHTTPServerTransport>();
 
-app.post("/mcp", async (req, res) => {
+app.post("/mcp", async (req: any, res: any) => {
   try {
     const sessionId = req.headers["mcp-session-id"] as string | undefined;
     let transport: StreamableHTTPServerTransport | undefined;
@@ -149,7 +149,7 @@ app.post("/mcp", async (req, res) => {
   }
 });
 
-app.get("/health", (_req, res) => {
+app.get("/health", (_req: any, res: any) => {
   res.status(200).json({ ok: true });
 });
 
