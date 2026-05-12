@@ -2,12 +2,10 @@ import { randomUUID } from "node:crypto";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createMcpExpressApp } from "@modelcontextprotocol/sdk/server/express.js";
-import { z } from "zod";
 import {
-  getCartSummary,
-  searchMedicinesByName,
-  updateCart,
-} from "@/lib/db";
+  executeMedicineTool,
+  mcpToolInputSchemas,
+} from "@/lib/medicine-order-tools";
 
 const host = process.env.MCP_HOST ?? process.env.HOST ?? "0.0.0.0";
 const port = Number(process.env.MCP_PORT ?? process.env.PORT ?? 3333);
@@ -17,22 +15,28 @@ const mcpServer = new McpServer({
   version: "1.0.0",
 });
 
+function asStructuredContent(value: unknown): Record<string, unknown> {
+  return value as Record<string, unknown>;
+}
+
 mcpServer.registerTool(
   "GetCart",
   {
     description: "Get all cart items with totals.",
   },
   async () => {
-    const cart = getCartSummary();
-
+    const outcome = await executeMedicineTool("GetCart", {});
+    if (!outcome.ok) {
+      throw new Error(outcome.error);
+    }
     return {
       content: [
         {
           type: "text",
-          text: JSON.stringify(cart, null, 2),
+          text: JSON.stringify(outcome.result, null, 2),
         },
       ],
-      structuredContent: cart,
+      structuredContent: asStructuredContent(outcome.result),
     };
   },
 );
@@ -41,39 +45,21 @@ mcpServer.registerTool(
   "UpdateCart",
   {
     description: "Replace cart with the provided medicine quantities.",
-    inputSchema: {
-      items: z
-        .array(
-          z.object({
-            medicineId: z.number().int().positive(),
-            quantity: z.number().int().nonnegative(),
-          }),
-        )
-        .min(0),
-    },
+    inputSchema: mcpToolInputSchemas.UpdateCart,
   },
-  async ({ items }) => {
-    updateCart(items);
-    const cart = getCartSummary();
-
+  async (args) => {
+    const outcome = await executeMedicineTool("UpdateCart", args);
+    if (!outcome.ok) {
+      throw new Error(outcome.error);
+    }
     return {
       content: [
         {
           type: "text",
-          text: JSON.stringify(
-            {
-              message: "Cart updated successfully.",
-              cart,
-            },
-            null,
-            2,
-          ),
+          text: JSON.stringify(outcome.result, null, 2),
         },
       ],
-      structuredContent: {
-        success: true,
-        cart,
-      },
+      structuredContent: asStructuredContent(outcome.result),
     };
   },
 );
@@ -82,23 +68,21 @@ mcpServer.registerTool(
   "searchMedicine",
   {
     description: "Search medicines by name.",
-    inputSchema: {
-      medicineName: z.string().min(1),
-    },
+    inputSchema: mcpToolInputSchemas.searchMedicine,
   },
-  async ({ medicineName }) => {
-    const medicines = searchMedicinesByName(medicineName);
-
+  async (args) => {
+    const outcome = await executeMedicineTool("searchMedicine", args);
+    if (!outcome.ok) {
+      throw new Error(outcome.error);
+    }
     return {
       content: [
         {
           type: "text",
-          text: JSON.stringify(medicines, null, 2),
+          text: JSON.stringify(outcome.result, null, 2),
         },
       ],
-      structuredContent: {
-        items: medicines,
-      },
+      structuredContent: asStructuredContent(outcome.result),
     };
   },
 );

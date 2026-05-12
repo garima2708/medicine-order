@@ -47,11 +47,11 @@ export default function CartPopup({
   }, []);
 
   return (
-    <div ref={containerRef} className="relative">
+    <div ref={containerRef} className="relative w-full sm:w-auto">
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
-        className="flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700"
+        className="flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 sm:w-auto sm:justify-start"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
