@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local sqlite database (auto-created and seeded on startup by src/lib/db.ts)
+/medicine-order.sqlite

@@ -56,7 +56,7 @@ export async function POST(request: Request) {
 
   function textResult(value: unknown): ToolResult {
     const text =
-      typeof value === "string" ? value : JSON.stringify(value, null, 2);
+      typeof value === "string" ? value : JSON.stringify(value);
     return { content: [{ type: "text", text }] };
   }
 

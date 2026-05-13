@@ -8,3 +8,6 @@ yarn-error.log*
 pnpm-debug.log*
 Dockerfile
 README.md
+
+# local sqlite database (auto-created and seeded on startup)
+medicine-order.sqlite
