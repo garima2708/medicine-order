@@ -88,7 +88,7 @@ export async function POST(request: Request) {
         tool_call_id,
         result: textResult(outcome.result),
       });
-      if (name === "UpdateCart") {
+      if (name === "udateCart") {
         revalidatePath("/");
       }
     } else {

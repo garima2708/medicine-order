@@ -35,7 +35,7 @@ export function getOpenAiToolDefinitions(): OpenAiToolDefinition[] {
     {
       type: "function",
       function: {
-        name: "GetCart",
+        name: "getCart",
         description: "Get all cart items with totals.",
         parameters: {
           type: "object",
@@ -47,7 +47,7 @@ export function getOpenAiToolDefinitions(): OpenAiToolDefinition[] {
     {
       type: "function",
       function: {
-        name: "UpdateCart",
+        name: "updateCart",
         description: "Replace cart with the provided medicine quantities.",
         parameters: {
           type: "object",
@@ -108,7 +108,7 @@ export async function executeMedicineTool(
 ): Promise<ToolExecutionOutcome> {
   try {
     switch (name) {
-      case "GetCart": {
+      case "getCart": {
         if (rawArguments != null && typeof rawArguments !== "object") {
           return {
             ok: false,
@@ -119,7 +119,7 @@ export async function executeMedicineTool(
         const cart = getCartSummary();
         return { ok: true, name, result: cart };
       }
-      case "UpdateCart": {
+      case "updateCart": {
         const { items } = updateCartArgsSchema.parse(rawArguments);
         updateCart(items);
         const cart = getCartSummary();
