@@ -6,12 +6,6 @@ First, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -42,19 +36,19 @@ This project includes an MCP server with Streamable HTTP transport at `/mcp`.
 ### Run
 
 ```bash
-pnpm mcp:dev
+npm run mcp:dev
 ```
 
 By default it runs on `127.0.0.1:3333`. You can override:
 
 ```bash
-MCP_HOST=127.0.0.1 MCP_PORT=3333 pnpm mcp:dev
+MCP_HOST=127.0.0.1 MCP_PORT=3333 npm run mcp:dev
 ```
 
 For container platforms (Coolify), use host `0.0.0.0` and map the service port:
 
 ```bash
-MCP_HOST=0.0.0.0 PORT=3333 pnpm mcp:start
+MCP_HOST=0.0.0.0 PORT=3333 npm run mcp:start
 ```
 
 ### Tools
