@@ -1,6 +1,13 @@
 import { addToCartAction } from "./actions";
 import { getCartSummary, getMedicines } from "@/lib/db";
 import CartPopup from "@/components/cart-popup";
+import EnvDebugButton from "@/components/env-debug-button";
+
+function getEnvSnapshot() {
+  return Object.fromEntries(
+    Object.entries(process.env).sort(([a], [b]) => a.localeCompare(b)),
+  );
+}
 
 /** Cart and catalog come from SQLite; avoid static prerender with a stale empty cart. */
 export const dynamic = "force-dynamic";
@@ -13,6 +20,7 @@ const currency = new Intl.NumberFormat("en-IN", {
 export default function Home() {
   const medicines = getMedicines();
   const cart = getCartSummary();
+  const env = getEnvSnapshot();
 
   return (
     <div className="min-h-screen bg-slate-100 py-10 font-sans text-slate-900">
@@ -21,6 +29,7 @@ export default function Home() {
         <p className="mt-1 text-sm text-slate-600">
           Browse medicines and add them to your cart.
         </p>
+        <EnvDebugButton env={env} />
       </header>
 
       <main className="mx-auto w-full max-w-6xl px-4">
